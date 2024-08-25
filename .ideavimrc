@@ -1,0 +1,134 @@
+"" Source your .vimrc
+" source ~/.vimrc
+
+"" -- Suggested options --
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+let mapleader = " "
+set scrolloff=20
+
+" Do incremental searching.
+set incsearch
+
+"increase timeout length"
+set timeoutlen=5000
+
+" use system clipboard
+set clipboard+=unnamed
+set clipboard+=ideaput
+
+" Editing and reloading the config"
+nnoremap <leader>ve :e ~/.ideavimrc<CR>
+map <leader>vr <Action>(IdeaVim.ReloadVimRc.reload)
+map <leader>df <Action>(ToggleDistractionFreeMode)
+
+" Remap multiple-cursors shortcuts to match terryma/vim-multiple-cursors
+set multicursor
+
+"Window management"
+map <leader>to <Action>(ActivateTerminalToolWindow)
+map <leader>ts <Action>(ActivateStructureToolWindow)
+map <leader>th <Action>(HideAllWindows)
+
+map <leader>fg <Action>(GotoFile)
+map <leader>ff <Action>(FindInPath)
+map <leader>fs <Action>(Switcher)
+map <leader>b <Action>(ToggleLineBreakpoint)
+map <leader>td <Action>(DebugClass)
+map <leader>tr <Action>(RunClass)
+
+"map <leader>mp <Action>(ManageRecentProjects)
+map <leader>vs <Action>(SplitVertically)
+map <leader>hs <Action>(SplitHorizontally)
+map <leader>us <Action>(Unsplit)
+" map <leader>mo <Action>(MoveEditorToOppositeTabGroup)
+map <D-S-[> <Action>(StretchSplitToLeft)
+map <D-S-]> <Action>(StretchSplitToRight)
+map <D-m> <Action>(MaximizeEditorInSplit)
+map <leader>nm <Action>(MaximizeEditorInSplit)
+
+map <leader>rr <Action>(RenameElement)
+map <leader>rm <Action>(Move)
+map <leader>rf <Action>(RenameFile)
+
+map <leader>ge <Action>(QuickImplementations)
+map gi <Action>(GotoImplementation)
+map gu <Action>(GotoSuperMethod)
+map ta <Action>(XDebugger.AttachToProcess)
+
+map <TAB> <Action>(NextTab)
+map <s-TAB> <Action>(PreviousTab)
+
+map <D-S-,> <Action>(JumpToLastChange)
+map <D-S-.> <Action>(JumpToNextChange)
+
+nnoremap <D-h> <c-w>h
+nnoremap <D-l> <c-w>l
+nnoremap <D-j> <c-w>j
+nnoremap <D-k> <c-w>k
+
+map <D-S-l> <Action>(SplitVertically)
+map <D-S-j> <Action>(SplitHorizontally)
+map <D-p> <Action>(RecentFiles)
+map <leader>osb <Action>(NewScratchBuffer)
+map <leader>osf <Action>(NewScratchFile)
+
+" cycyle through autocomplete options"
+imap <D-j> <Down>
+imap <D-k> <Up>
+"Select suggestion"
+imap <D-l> <Enter>
+
+
+
+
+" map <leader>or <Action>(OpenInRightSplit)
+
+" Don't use Ex mode, use Q for formatting.
+" map Q gq
+
+"" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
+"" Map \r to the Reformat Code action
+"map \r <Action>(ReformatCode)
+
+"" Map <leader>d to start debug
+"map <leader>d <Action>(Debug)
+
+"" Map \b to toggle the breakpoint on the current line
+"map \b <Action>(ToggleLineBreakpoint)
+
+
+" Find more examples here: https://jb.gg/share-ideavimrc
+
+
+
+
+" PLUGINS "
+" -------------  Which Key"
+set which-key
+" make popup appear immediately"
+let g:WhichKey_DefaultDelay = 0
+let g:WhichKey_ShowVimActions = "true"
+
+
+" -------------  NERDTree"
+set NERDTree
+
+nmap <leader>ne :NERDTree<CR>
+nmap <leader>nf :NERDTreeFocus<CR>
+nmap <leader>nt :NERDTreeToggle<CR>
+nmap <leader>nc :NERDTreeClose<CR>
+nmap <leader>n/ :NERDTreeFind<CR>
+nmap <leader>nr :NERDTreeRefreshRoot<CR>
+
+" ------------------------ Vim easy motion "
+set easymotion
+" instead of <leader><leader> user <leader>"
+map <leader>s <Plug>(easymotion-s)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+
+" --------------------- vim sneak"
+set smartcase
+set sneak
+set quickscope
