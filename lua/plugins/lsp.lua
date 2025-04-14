@@ -64,7 +64,7 @@ return {
     local servers_to_install = {
       "lua_ls",      -- Lua
       "pylsp",       -- Python (with mypy plugin)
-      "ts_ls",    -- TypeScript/JavaScript
+      "ts_ls",       -- TypeScript/JavaScript
       "gopls",       -- Go
       "jsonls",      -- JSON
       "html",        -- HTML
@@ -143,6 +143,46 @@ return {
             config.settings.pylsp.plugins.mypy = config.settings.pylsp.plugins.mypy or {}
             config.settings.pylsp.plugins.mypy.python_path = python_utils.get_python_path()
           end
+        })
+      end,
+      
+      -- Custom configuration for TypeScript/React/JSX (ts_ls)
+      ["ts_ls"] = function()
+        require("lspconfig")["ts_ls"].setup({
+          capabilities = capabilities,
+          settings = {
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              }
+            },
+            javascript = {
+              inlayHints = {
+                includeInlayParameterNameHints = "all",
+                includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+                includeInlayFunctionParameterTypeHints = true,
+                includeInlayVariableTypeHints = true,
+                includeInlayPropertyDeclarationTypeHints = true,
+                includeInlayFunctionLikeReturnTypeHints = true,
+                includeInlayEnumMemberValueHints = true,
+              }
+            }
+          },
+          filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern(
+              "tsconfig.json",
+              "jsconfig.json",
+              "package.json"
+            )(fname) or vim.fn.getcwd()
+          end,
+          single_file_support = true,
         })
       end,
     })
