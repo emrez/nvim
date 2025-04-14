@@ -103,4 +103,43 @@ function M.get_env_status()
   }
 end
 
+-- Install required plugins for Python LSP functionality using uv
+function M.install_lsp_plugins()
+  local venv_dir = vim.fn.fnamemodify(M.get_python_path(), ':h:h')
+  local use_uv = true
+  
+  -- Check if uv is available
+  if vim.fn.executable('uv') ~= 1 then
+    use_uv = false
+    vim.notify("uv not found, trying to use pip instead", vim.log.levels.WARN)
+  end
+  
+  local cmd
+  if use_uv then
+    -- Use uv to install packages
+    cmd = string.format("uv pip install --python %s 'python-lsp-server[all]' mypy python-lsp-mypy", 
+                        vim.fn.shellescape(M.get_python_path()))
+  else
+    -- Fall back to pip if uv is not available
+    cmd = string.format("%s -m pip install 'python-lsp-server[all]' mypy python-lsp-mypy", 
+                        vim.fn.shellescape(M.get_python_path()))
+  end
+  
+  vim.notify("Installing LSP plugins: python-lsp-server, mypy, python-lsp-mypy...", vim.log.levels.INFO)
+  vim.fn.jobstart(cmd, {
+    on_exit = function(_, code)
+      if code == 0 then
+        vim.notify("Successfully installed LSP plugins", vim.log.levels.INFO)
+      else
+        vim.notify("Failed to install LSP plugins. Try manually with:\n" .. cmd, vim.log.levels.ERROR)
+      end
+    end,
+    on_stderr = function(_, data)
+      if data and #data > 0 then
+        vim.notify("Error installing LSP plugins: " .. vim.inspect(data), vim.log.levels.ERROR)
+      end
+    end
+  })
+end
+
 return M

@@ -69,6 +69,7 @@ function M.setup()
     require("utils.python").run_current_file()
   end, { desc = "Run current Python file" })
   
+  
   -- Add keymaps for Python commands
   vim.keymap.set("n", "<leader>vp", "<cmd>PythonEnvInfo<CR>", { desc = "Show Python env info" })
   vim.keymap.set("n", "<F5>", "<cmd>RunPythonFile<CR>", { desc = "Run current Python file" })

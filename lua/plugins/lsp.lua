@@ -5,11 +5,15 @@ return {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
     "folke/neodev.nvim",
+    "folke/neoconf.nvim",
     "hrsh7th/cmp-nvim-lsp",
   },
   config = function()
     -- Neodev setup (must be before lspconfig)
     require("neodev").setup()
+    
+    -- Setup neoconf before lspconfig
+    require("neoconf").setup()
     
     -- First, set up mason
     require("mason").setup({
@@ -59,7 +63,7 @@ return {
     -- These names must match those used by lspconfig
     local servers_to_install = {
       "lua_ls",      -- Lua
-      "pyright",     -- Python
+      "pylsp",       -- Python (with mypy plugin)
       "ts_ls",    -- TypeScript/JavaScript
       "gopls",       -- Go
       "jsonls",      -- JSON
@@ -111,26 +115,33 @@ return {
         })
       end,
       
-      -- Custom configuration for Python (pyright)
-      ["pyright"] = function()
+      -- Custom configuration for Python (pylsp with mypy)
+      ["pylsp"] = function()
         local python_utils = require("utils.python")
         
-        require("lspconfig").pyright.setup({
+        require("lspconfig").pylsp.setup({
           capabilities = capabilities,
           settings = {
-            python = {
-              analysis = {
-                typeCheckingMode = "basic",
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "workspace",
-                autoImportCompletions = true,  -- Enable auto-import completions
-                importFormat = "absolute"      -- Use absolute imports by default
+            pylsp = {
+              plugins = {
+                pycodestyle = { enabled = false },  -- Disable pycodestyle in favor of mypy
+                mccabe = { enabled = false },      -- Disable mccabe
+                pyflakes = { enabled = false },    -- Disable pyflakes
+                flake8 = { enabled = false },      -- Disable flake8
+                mypy = { 
+                  enabled = true,
+                  live_mode = true,
+                  dmypy = true
+                }
               }
             }
           },
           before_init = function(_, config)
-            config.settings.python.pythonPath = python_utils.get_python_path()
+            config.settings.pylsp = config.settings.pylsp or {}
+            config.settings.pylsp.configurationSources = { "mypy" }
+            config.settings.pylsp.plugins = config.settings.pylsp.plugins or {}
+            config.settings.pylsp.plugins.mypy = config.settings.pylsp.plugins.mypy or {}
+            config.settings.pylsp.plugins.mypy.python_path = python_utils.get_python_path()
           end
         })
       end,

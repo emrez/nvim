@@ -43,18 +43,5 @@ return {
       vim.keymap.set("n", "<leader>vp", "<cmd>UvRunPytest<CR>", { desc = "Run pytest with UV" })
       vim.keymap.set("n", "<leader>vm", "<cmd>UvRunMypy<CR>", { desc = "Run mypy with UV" })
     end,
-  },
-  
-  -- Python Auto-Import support
-  {
-    "neovim/nvim-lspconfig",
-    dependencies = {
-      "hrsh7th/nvim-cmp",
-      "hrsh7th/cmp-nvim-lsp",
-    },
-    config = function()
-      -- Load the auto-imports plugin functionality
-      require("plugins.python.auto_imports")
-    end,
   }
 }

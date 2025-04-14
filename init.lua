@@ -4,10 +4,9 @@ require('config.options')
 require('config.keymaps')
 require('config.autocmds')
 require('config.transparent')  -- Load transparency module
-require('config.pyproject').setup()  -- Load Python project detection
 
 -- Load Python auto-import utility
-require('plugins.python.auto_imports')  -- Ensure auto-imports module is available
+-- require('plugins.python.auto_imports')  -- Ensure auto-imports module is available
 
 -- Bootstrap lazy.nvim plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
@@ -25,3 +24,4 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Load plugins
 require("lazy").setup("plugins")
+require('config.pyproject').setup()  -- Load Python project detection

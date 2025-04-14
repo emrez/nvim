@@ -32,8 +32,7 @@ return {
         { "<leader>f", group = "Find" },
         { "<leader>b", group = "Buffers" },
         { "<leader>w", group = "Write" },
-        -- { "<leader>hg", group = "Git" },
-        { "<leader>g", group = "Go To" },
+        { "<leader>g", group = "Git" },
         { "<leader>h", group = "Harpoon/Hunks" },
         { "<leader>l", group = "LSP" },
         { "<leader>s", group = "Split" },
@@ -45,7 +44,7 @@ return {
         { "<leader>z", group = "Zettelkasten" },
         { "<leader>r", group = "Refactor" },
         { "<leader>n", group = "Notifications" },
-        { "g", group = "Go to" }, -- Add this line for 'g' prefix
+        -- { "g", group = "Go to" }, -- Add this line for 'g' prefix
       })
     end,
   },
