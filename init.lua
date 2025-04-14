@@ -24,4 +24,5 @@ vim.opt.rtp:prepend(lazypath)
 
 -- Load plugins
 require("lazy").setup("plugins")
+
 require('config.pyproject').setup()  -- Load Python project detection

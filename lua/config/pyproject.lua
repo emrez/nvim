@@ -24,6 +24,9 @@ function M.setup()
         if python_utils.in_uv_environment() then
           local env_status = python_utils.get_env_status()
           vim.notify("Using UV environment: " .. env_status.full_path, vim.log.levels.INFO)
+          vim.cmd("LspRestart")
+          vim.cmd("PylspRestart")
+          
         end
       end
     end

@@ -138,10 +138,6 @@ return {
           },
           before_init = function(_, config)
             config.settings.pylsp = config.settings.pylsp or {}
-            config.settings.pylsp.configurationSources = { "mypy" }
-            config.settings.pylsp.plugins = config.settings.pylsp.plugins or {}
-            config.settings.pylsp.plugins.mypy = config.settings.pylsp.plugins.mypy or {}
-            config.settings.pylsp.plugins.mypy.python_path = python_utils.get_python_path()
           end
         })
       end,
