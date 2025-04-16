@@ -56,17 +56,9 @@ return {
     config = function()
       local notify = require("notify")
       notify.setup({
-        stages = "fade",
+        stages = "static",
         timeout = 3000,
         render = "default",
-        icons = {
-          ERROR = "",
-          WARN = "",
-          INFO = "",
-          DEBUG = "",
-          TRACE = "✎",
-        },
-        background_colour = "#000000",
         max_width = 80,
         minimum_width = 50,
       })
@@ -250,30 +242,6 @@ return {
     end,
   },
   
-  -- Dim inactive portions of code
-  {
-    "folke/twilight.nvim",
-    config = function()
-      require("twilight").setup({
-        dimming = {
-          alpha = 0.25,
-          color = { "Normal", "#ffffff" },
-          term_bg = "#000000",
-          inactive = false,
-        },
-        context = 10,
-        treesitter = true,
-        expand = {
-          "function",
-          "method",
-          "table",
-          "if_statement",
-        },
-      })
-      
-
-    end,
-  },
   
   -- Indent guides
   {
@@ -302,7 +270,7 @@ return {
       },
     },
   },
-  
+
   -- Better scrollbar
   {
     "petertriho/nvim-scrollbar",
@@ -461,9 +429,39 @@ return {
         provider_selector = function(bufnr, filetype, buftype)
           return {'treesitter', 'indent'}
         end,
+        -- fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
+        --   local newVirtText = {}
+        --   local suffix = ('  %d '):format(endLnum - lnum)
+        --   local sufWidth = vim.fn.strdisplaywidth(suffix)
+        --   local targetWidth = width - sufWidth
+        --   local curWidth = 0
+        --   for _, chunk in ipairs(virtText) do
+        --     local chunkText = chunk[1]
+        --     local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+        --     if targetWidth > curWidth + chunkWidth then
+        --       table.insert(newVirtText, chunk)
+        --     else
+        --       chunkText = truncate(chunkText, targetWidth - curWidth)
+        --       local hlGroup = chunk[2]
+        --       table.insert(newVirtText, {chunkText, hlGroup})
+        --       chunkWidth = vim.fn.strdisplaywidth(chunkText)
+        --       -- str width returned from truncate() may less than 2nd argument, need padding
+        --       if curWidth + chunkWidth < targetWidth then
+        --         suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
+        --       end
+        --       break
+        --     end
+        --     curWidth = curWidth + chunkWidth
+        --   end
+        --   table.insert(newVirtText, {suffix, 'MoreMsg'})
+        --   return newVirtText
+        -- end,
         fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
           local newVirtText = {}
-          local suffix = ('  %d '):format(endLnum - lnum)
+          local suffix = ('  %d lines '):format(endLnum - lnum)
+          local preview = vim.api.nvim_buf_get_lines(0, lnum - 1, lnum, false)[1] or ""
+          preview = preview:sub(1, 30) -- Limit preview to 30 characters
+          suffix = suffix .. " | " .. preview
           local sufWidth = vim.fn.strdisplaywidth(suffix)
           local targetWidth = width - sufWidth
           local curWidth = 0
@@ -475,17 +473,12 @@ return {
             else
               chunkText = truncate(chunkText, targetWidth - curWidth)
               local hlGroup = chunk[2]
-              table.insert(newVirtText, {chunkText, hlGroup})
-              chunkWidth = vim.fn.strdisplaywidth(chunkText)
-              -- str width returned from truncate() may less than 2nd argument, need padding
-              if curWidth + chunkWidth < targetWidth then
-                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
-              end
+              table.insert(newVirtText, { chunkText, hlGroup })
               break
             end
             curWidth = curWidth + chunkWidth
           end
-          table.insert(newVirtText, {suffix, 'MoreMsg'})
+          table.insert(newVirtText, { suffix, "MoreMsg" })
           return newVirtText
         end,
         preview = {
@@ -509,6 +502,15 @@ return {
       vim.keymap.set("n", "zr", ufo.openFoldsExceptKinds, { desc = "Open folds except kinds" })
       vim.keymap.set("n", "zm", ufo.closeFoldsWith, { desc = "Close folds with" })
       vim.keymap.set("n", "zp", ufo.peekFoldedLinesUnderCursor, { desc = "Peek folded lines under cursor" })
+
+      vim.keymap.set("n", "za", "za", { desc = "Toggle fold at cursor" })
+      vim.keymap.set("n", "[z", "zj", { desc = "Jump to next fold" })
+      vim.keymap.set("n", "]z", "zk", { desc = "Jump to previous fold" })
+
+      vim.cmd([[
+        highlight Folded guibg=#2E3440 guifg=#88C0D0
+        highlight FoldColumn guibg=#3B4252 guifg=#D8DEE9
+      ]])
       
       -- Option for better look
       vim.o.foldcolumn = '1'

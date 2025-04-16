@@ -4,6 +4,7 @@ return {
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
+      -- "mfussenegger/nvim-dap-python",  -- Python debugging support
   },
   config = function()
     -- Get Python utilities
@@ -132,10 +133,119 @@ return {
       vim.notify("Python LSP server restarted", vim.log.levels.INFO)
     end, { desc = "Restart Python LSP server" })
     
-    -- Create autocommand to ensure pylsp attaches correctly to Python files
+    -- Function to run a Python tool with the correct interpreter
+    local function run_python_tool(tool, args, silent)
+      local python_path = python_utils.get_python_path()
+      local venv_dir = vim.fn.fnamemodify(python_path, ':h')
+      local tool_path = venv_dir .. "/" .. tool
+      
+      -- Check if tool exists in the virtual environment
+      if vim.fn.filereadable(tool_path) ~= 1 then
+        -- Try to find it in the system path
+        if vim.fn.executable(tool) == 1 then
+          tool_path = tool
+        else
+          vim.notify(tool .. " not found! You may need to install it with :PylspSetup", vim.log.levels.ERROR)
+          return false
+        end
+      end
+      
+      local file_path = vim.fn.expand("%:p")
+      local cmd = tool_path .. " " .. args .. " " .. file_path
+      
+      if not silent then
+        vim.notify("Running: " .. cmd, vim.log.levels.INFO)
+      end
+      
+      -- Save the current buffer before running the tool
+      vim.cmd("silent! write")
+      
+      -- Run the command and display output in a split terminal
+      vim.cmd("belowright 10split | terminal " .. cmd)
+      return true
+    end
+    
+    -- Commands for running Python tools
+    vim.api.nvim_create_user_command("Black", function()
+      run_python_tool("black", "", false)
+    end, { desc = "Format with Black" })
+    
+    vim.api.nvim_create_user_command("Isort", function()
+      run_python_tool("isort", "", false)
+    end, { desc = "Sort imports with isort" })
+    
+    vim.api.nvim_create_user_command("Mypy", function()
+      run_python_tool("mypy", "--show-column-numbers", false)
+    end, { desc = "Type check with mypy" })
+    
+    vim.api.nvim_create_user_command("Flake8", function()
+      run_python_tool("flake8", "", false)
+    end, { desc = "Lint with flake8" })
+
+    -- require('dap-python').setup('~/.venv/bin/python')
+    
+    -- -- UV integration commands
+    -- vim.api.nvim_create_user_command('UvVenvCreate', function()
+    --   local venv_path = vim.fn.input("Virtual environment path (.venv): ", ".venv")
+    --   vim.cmd('terminal uv venv create ' .. venv_path)
+    -- end, { desc = "Create UV virtual environment" })
+    -- 
+    -- vim.api.nvim_create_user_command('UvInstall', function(opts)
+    --   vim.cmd('terminal uv pip install ' .. opts.args)
+    -- end, { nargs = "*", desc = "Install packages with UV" })
+    -- 
+    -- vim.api.nvim_create_user_command('UvInstallRequirements', function()
+    --   local req_file = vim.fn.input("Requirements file: ", "requirements.txt")
+    --   vim.cmd('terminal uv pip install -r ' .. req_file)
+    -- end, { desc = "Install from requirements.txt with UV" })
+    -- 
+    -- vim.api.nvim_create_user_command('UvRunPytest', function(opts)
+    --   local args = opts.args or ""
+    --   vim.cmd('terminal uv run pytest ' .. args)
+    -- end, { nargs = "*", desc = "Run pytest with UV" })
+    -- 
+    -- vim.api.nvim_create_user_command('UvRunMypy', function(opts)
+    --   local args = opts.args or "."
+    --   vim.cmd('terminal uv run mypy ' .. args)
+    -- end, { nargs = "*", desc = "Run mypy with UV" })
+    -- 
+    -- -- Keymaps for UV integration
+    -- vim.keymap.set("n", "<leader>vc", "<cmd>UvVenvCreate<CR>", { desc = "Create UV virtual env" })
+    -- vim.keymap.set("n", "<leader>vi", "<cmd>UvInstall<CR>", { desc = "Install package with UV" })
+    -- vim.keymap.set("n", "<leader>vr", "<cmd>UvInstallRequirements<CR>", { desc = "Install requirements with UV" })
+    -- vim.keymap.set("n", "<leader>vp", "<cmd>UvRunPytest<CR>", { desc = "Run pytest with UV" })
+    -- vim.keymap.set("n", "<leader>vm", "<cmd>UvRunMypy<CR>", { desc = "Run mypy with UV" })
+    
+    -- Add keymaps for Python tools, but only for Python files
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "python",
       callback = function()
+        -- Register keymaps with which-key if available
+        local wk_ok, wk = pcall(require, "which-key")
+        if wk_ok then
+          wk.register({
+            -- LSP Python tools under leader + l + p
+            ["<leader>lp"] = {
+              name = "Python Tools",
+              b = { "<cmd>Black<CR>", "Format with Black" },
+              i = { "<cmd>Isort<CR>", "Sort imports" },
+              m = { "<cmd>Mypy<CR>", "Run mypy" },
+              f = { "<cmd>Flake8<CR>", "Run flake8" },
+              r = { "<cmd>PylspRestart<CR>", "Restart Python LSP" },
+            },
+            -- Add direct formatting shortcut
+            ["<leader>fb"] = { "<cmd>Black<CR>", "Format with Black" },
+          })
+        end
+        
+        -- Direct keymaps (not dependent on which-key)
+        vim.keymap.set("n", "<leader>lpb", "<cmd>Black<CR>", { buffer = true, desc = "Format with Black" })
+        vim.keymap.set("n", "<leader>lpi", "<cmd>Isort<CR>", { buffer = true, desc = "Sort imports" })
+        vim.keymap.set("n", "<leader>lpm", "<cmd>Mypy<CR>", { buffer = true, desc = "Run mypy" })
+        vim.keymap.set("n", "<leader>lpf", "<cmd>Flake8<CR>", { buffer = true, desc = "Run flake8" })
+        vim.keymap.set("n", "<leader>lpr", "<cmd>PylspRestart<CR>", { buffer = true, desc = "Restart Python LSP" })
+        vim.keymap.set("n", "<leader>fb", "<cmd>Black<CR>", { buffer = true, desc = "Format with Black" })
+        
         -- Ensure LSP is running and correctly attached
         vim.cmd("LspStart pylsp")
       end,

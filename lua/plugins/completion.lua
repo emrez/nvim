@@ -56,6 +56,10 @@ return {
         { name = "luasnip" },
         { name = "buffer" },
         { name = "path" },
+        { name = 'codecompanion_models' },
+        { name = 'codecompanion_slash_commands' },
+        { name = 'codecompanion_tools' },
+        { name = 'codecompanion_variables' },
       }),
       formatting = {
         format = function(entry, vim_item)

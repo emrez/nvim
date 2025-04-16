@@ -12,25 +12,5 @@ return {
       
       return opts
     end,
-  },
-  
-  -- Replace neodev with the faster and better lazydev
-  {
-    "folke/lazydev.nvim",
-    ft = "lua",  -- Only load for Lua files
-    opts = {
-      library = {
-        -- Load the documentation for these plugins
-        plugins = { 
-          "nvim-dap",
-          "telescope.nvim",
-          "plenary.nvim", 
-          "lua-dev.nvim",
-          "nvim-lspconfig"
-        },
-        -- Include the neovim lua API
-        types = true,
-      },
-    },
   }
 }

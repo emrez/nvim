@@ -80,6 +80,6 @@ vim.api.nvim_create_user_command("TransparencyDisable", function() M.disable() e
 vim.api.nvim_create_user_command("TransparencyToggle", function() M.toggle() end, {})
 
 -- Setup keymaps for transparency control
-vim.keymap.set("n", "<leader>tt", M.toggle, { desc = "Toggle transparency" })
+vim.keymap.set("n", "<leader>tp", M.toggle, { desc = "Toggle transparency" })
 
 return M

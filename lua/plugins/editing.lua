@@ -28,16 +28,13 @@ return {
     dependencies = { "tpope/vim-repeat" },
     config = function()
       require("leap").add_default_mappings()
-      -- Optional: Enhance leap's cross-window jumping
-      require("leap").opts.special_keys = {
-        repeat_search = '<enter>',
-        next_match    = '<enter>',
-        prev_match    = '<tab>',
-        next_group    = '<space>',
-        prev_group    = '<tab>',
-        multi_accept  = '<enter>',
-        multi_revert  = '<backspace>',
-      }
+      require('leap').opts.preview_filter =
+        function (ch0, ch1, ch2)
+          return not (
+            ch1:match('%s') or
+            ch0:match('%a') and ch1:match('%a') and ch2:match('%a')
+          )
+        end
     end,
   },
   
@@ -129,7 +126,7 @@ return {
       require("zen-mode").setup({
         window = {
           backdrop = 0.95,
-          width = 120,
+          width = 200,
           height = 1,
           options = {
             signcolumn = "no",
@@ -144,11 +141,11 @@ return {
         plugins = {
           options = {
             enabled = true,
-            ruler = false,
+            ruler = true,
             showcmd = false,
           },
           twilight = { enabled = true },
-          gitsigns = { enabled = false },
+          gitsigns = { enabled = true },
           tmux = { enabled = false },
         },
         on_open = function()
@@ -164,19 +161,19 @@ return {
       vim.keymap.set("n", "<leader>tz", "<cmd>ZenMode<CR>", { desc = "Toggle zen mode" })
     end,
   },
-  
-  -- Twilight dims inactive portions of code
+
+  -- Dim inactive portions of code
   {
     "folke/twilight.nvim",
     config = function()
       require("twilight").setup({
         dimming = {
-          alpha = 0.25,
+          alpha = 0.20,
           color = { "Normal", "#ffffff" },
           term_bg = "#000000",
           inactive = false,
         },
-        context = 10,
+        context = 25,
         treesitter = true,
         expand = {
           "function",
@@ -184,7 +181,6 @@ return {
           "table",
           "if_statement",
         },
-        exclude = {},
       })
       
       vim.keymap.set("n", "<leader>tt", "<cmd>Twilight<CR>", { desc = "Toggle twilight" })
