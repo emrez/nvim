@@ -4,7 +4,7 @@
 local M = {}
 
 -- Load WezTerm-specific optimizations
-local wezterm = require("config.wezterm")
+local wezterm = require("emrez.config.wezterm")
 wezterm.setup()
 
 -- Default transparency settings

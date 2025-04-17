@@ -92,8 +92,8 @@ return {
         -- Allow a moment for the colorscheme to apply fully
         vim.defer_fn(function()
           -- Re-enable transparency using our enhanced function
-          if package.loaded["config.transparent"] then
-            require("config.transparent").enable()
+          if package.loaded["emrez.config.transparent"] then
+            require("emrez.config.transparent").enable()
           end
           
           -- We need to re-apply syntax highlighting
