@@ -1,25 +1,4 @@
--- UI Utilities (Comment, Autopairs, Which-key)
 return {
-  -- Better commenting
-  {
-    "numToStr/Comment.nvim",
-    event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("Comment").setup()
-    end,
-  },
-  
-  -- Autopairs
-  {
-    "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    config = function()
-      require("nvim-autopairs").setup({
-        check_ts = true,
-      })
-    end,
-  },
-  
   -- Which-key (helps you remember keybindings)
   {
     "folke/which-key.nvim",

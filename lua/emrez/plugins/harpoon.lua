@@ -1,12 +1,13 @@
 -- Harpoon configuration
 -- Quickly jump between important files in your project
+--https://github.com/ThePrimeagen/harpoon/tree/harpoon2
 return {
   "ThePrimeagen/harpoon",
   branch = "harpoon2",
   dependencies = { "nvim-lua/plenary.nvim" },
   config = function()
     local harpoon = require("harpoon")
-    
+
     -- REQUIRED
     harpoon:setup({
       settings = {

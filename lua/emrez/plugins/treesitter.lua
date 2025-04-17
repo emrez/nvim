@@ -9,7 +9,9 @@ return {
         "javascript", "typescript", "tsx", 
         "html", "css", "json", "yaml", 
         "python", "go", "rust", "c", "cpp", 
-        "bash", "markdown", "markdown_inline" 
+        "bash", "markdown", "markdown_inline",
+        "regex",  -- Required by noice.nvim
+        "jsonc",  -- Required by neoconf.nvim
       },
       highlight = {
         enable = true,

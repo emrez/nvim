@@ -1,4 +1,3 @@
--- Key mappings
 local map = vim.keymap.set
 
 -- Modes:
@@ -81,3 +80,7 @@ keymap("t", "<C-h>", "<C-\\><C-n><C-w>h")       -- Navigate from terminal
 keymap("t", "<C-j>", "<C-\\><C-n><C-w>j")
 keymap("t", "<C-k>", "<C-\\><C-n><C-w>k")
 keymap("t", "<C-l>", "<C-\\><C-n><C-w>l")
+
+map({ "n", "x" }, "<leader>fm", function()
+  require("conform").format { lsp_fallback = true }
+end, { desc = "general format file" })

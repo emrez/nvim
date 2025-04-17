@@ -7,7 +7,7 @@ return {
     config = function()
       require("catppuccin").setup({
         -- Use the "mocha" flavor (darker, works better with transparency)
-        flavour = "mocha",
+         flavour = "mocha",
         
         -- Enable terminal colors
         term_colors = true,

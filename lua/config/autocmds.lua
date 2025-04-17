@@ -28,8 +28,6 @@ autocmd("BufReadPost", {
 autocmd("BufWritePre", {
   group = general,
   callback = function()
-    -- This is a placeholder. Actual formatting will be handled by null-ls or similar plugin
-    -- vim.lsp.buf.format({ async = false })
   end,
 })
 
