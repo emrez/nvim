@@ -4,8 +4,11 @@ local null_ls = require('null-ls')
 
 local opts = {
   sources = {
-    null_ls.builtins.diagnostics.mypy,
+    -- null_ls.builtins.diagnostics.mypy,
     null_ls.builtins.formatting.black,
+    nls.builtins.formatting.gofumpt,
+    nls.builtins.formatting.goimports_reviser,
+    nls.builtins.formatting.golines,
   },
   on_attach = function(client, bufnr)
     if client.supports_method("textDocument/formatting") then

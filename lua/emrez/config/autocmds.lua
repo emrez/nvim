@@ -14,8 +14,7 @@ autocmd({ "UIEnter", "BufReadPost", "BufNewFile" }, {
     if file ~= "" and buftype ~= "nofile" and vim.g.ui_entered then
       vim.api.nvim_exec_autocmds("User", { pattern = "FilePost", modeline = false })
       vim.api.nvim_del_augroup_by_name "NvFilePost"
-
-      vim.schedule(function()
+vim.schedule(function()
         vim.api.nvim_exec_autocmds("FileType", {})
 
         if vim.g.editorconfig then

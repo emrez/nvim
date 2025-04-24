@@ -13,9 +13,10 @@ return {
     opts = {
     }
   },
+  { "williamboman/mason-lspconfig.nvim" },
   {
     "neovim/nvim-lspconfig",
-    dependencies = { 'benomahony/uv.nvim' },
+    dependencies = { 'benomahony/uv.nvim', "williamboman/mason-lspconfig.nvim"  },
     event = "User FilePost",
     config = function() 
       local config = require("emrez.config.lspconfig")
@@ -31,13 +32,20 @@ return {
         filetypes = { "python" },
         settings = {
           pyright = {
-            disableOrganizeImports = true,
+            -- disableOrganizeImports = true,
+            useLibraryCodeForTypes = true,
           },
           python = {
             analysis = {
-              ignore = { "*" }
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "workspace",
             }
           }
+          -- python = {
+          --   analysis = {
+          --     ignore = { "*" }
+          --   }
+          -- }
         },
         -- -- Configure for uv: find the Python executable from uv virtual environment
         -- before_init = function(_, config)
@@ -69,7 +77,34 @@ return {
         --   require("uv").auto_activate_venv()
         -- end,
       })
+
+      lspconfig.gopls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+      
+        filetypes = { "go", "gomod", "gosum", "gotmpl" },
+        settings = {
+          gopls = {
+            analyses = { unusedparams = true },
+            codelenses = { generate = true, test = true },
+          }
+        }
+      }
     end
+  },
+  -- Go power‑pack (LSP, DAP, testing, coverage, gomod helpers)
+  {
+    "ray-x/go.nvim",  -- actively maintained, modern Go plugin  [oai_citation_attribution:0‡GitHub](https://github.com/ray-x/go.nvim?utm_source=chatgpt.com)
+    dependencies = { "nvim-treesitter/nvim-treesitter" },  --, "mfussenegger/nvim-dap" },
+    ft = { "go", "gomod", "gosum", "gotmpl" },
+    opts = {
+      lsp_keymaps = false,  
+      run_in_floaterm = true,
+      dap_debug = false,
+      dap_debug_keymap = false,
+      trouble = true,
+    },
+    build = ':lua require("go.install").update_all_sync()', -- installs dlv, etc.
   },
 
   {

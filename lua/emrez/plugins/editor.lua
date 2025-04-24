@@ -29,6 +29,8 @@ return {
       require("ibl").setup()
     end,
   },
+  { "akinsho/bufferline.nvim" },
+  { "folke/trouble.nvim" },
 
   -- File explorer
   {
@@ -40,9 +42,9 @@ return {
         view = {
           width = 30,
         },
-        renderer = {
-          group_empty = true,
-        },
+        -- renderer = {
+        --   group_empty = true,
+        -- },
         filters = {
           dotfiles = false,
         },
@@ -50,6 +52,72 @@ return {
       vim.keymap.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file explorer" })
       vim.keymap.set("n", "<leader>o", "<cmd>NvimTreeFocus<CR>", { desc = "Focus file explorer" })
     end,
+  },
+
+  {
+    'mikew/nvim-drawer',
+    dependencies = { "nvim-tree/nvim-tree.lua" },
+    opts = {},
+    config = function(_, opts)
+      local drawer = require('nvim-drawer')
+      drawer.setup(opts)
+
+      drawer.create_drawer({
+        -- This is needed for nvim-tree.
+        nvim_tree_hack = true,
+
+        -- Position on the right size of the screen.
+        -- position = 'left',
+        -- size = 40,
+        size = 15,
+        position = 'below',
+
+        --
+        does_own_buffer = function(context)
+            return context.bufname:match('term') ~= nil
+          end,
+
+        on_vim_enter = function(event)
+          --- Example mapping to toggle.
+          vim.keymap.set('n', '<leader>tf', function()
+            event.instance.focus()
+          end, { desc = "Focus terminal" })
+
+          vim.keymap.set('n', '<leader>to', function()
+            event.instance.toggle()
+          end, { desc = "Toggle terminal" })
+
+          vim.keymap.set('n', '<leader>tn', function()
+            event.instance.open({ mode = 'new' })
+          end, { desc = "New terminal" })
+          vim.keymap.set('n', '<TAB>', function()
+            event.instance.go(1)
+          end, { desc = "Next terminal" })
+          vim.keymap.set('n', '<S-TAB>', function()
+            event.instance.go(-1)
+          end, { desc = "Previous terminal" })
+          vim.keymap.set('n', '<leader>tf', function()
+            event.instance.toggle_zoom()
+          end, { desc = "Toggle zoom" })
+        end,
+
+        on_did_create_buffer = function()
+         vim.fn.termopen(os.getenv('SHELL'))
+        end,
+
+        -- Remove some UI elements.
+          on_did_open_buffer = function()
+            vim.opt_local.number = false
+            vim.opt_local.signcolumn = 'no'
+            vim.opt_local.statuscolumn = ''
+          end,
+
+          -- Scroll to the end when changing tabs.
+          on_did_open = function()
+            -- vim.cmd('$')
+          end,
+      })
+    end
   },
 
   -- Better commenting
