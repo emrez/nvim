@@ -39,3 +39,4 @@ autocmd("LspAttach", {
   end,
   desc = 'LSP: Disable hover capability from Ruff',
 })
+

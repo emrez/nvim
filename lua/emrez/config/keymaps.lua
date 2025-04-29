@@ -26,6 +26,8 @@ keymap("n", "<leader>sv", "<C-w>v")             -- Split vertically
 keymap("n", "<leader>sh", "<C-w>s")             -- Split horizontally
 keymap("n", "<leader>se", "<C-w>=")             -- Make splits equal
 keymap("n", "<leader>sx", "<cmd>close<CR>")     -- Close current split
+keymap("n", "<leader>z", "<C-w>|")              -- Toggle zoom (maximize width)
+keymap("n", "<leader>Z", "<C-w>_")              -- Toggle zoom (maximize height)
 
 -- Better navigation
 keymap("n", "J", "mzJ`z")                       -- Join lines without moving cursor
@@ -70,6 +72,18 @@ keymap("n", "<leader>w", "<cmd>w<CR>")          -- Save
 keymap("n", "<leader>q", "<cmd>q<CR>")          -- Quit
 keymap("n", "<leader>wq", "<cmd>wq<CR>")        -- Save and quit
 keymap("n", "<leader>Q", "<cmd>qa!<CR>")        -- Force quit all
+
+-- Pane resizing with leader keys (following existing patterns)
+keymap("n", "<leader>rh", "<cmd>vertical resize -2<CR>")  -- Decrease width
+keymap("n", "<leader>rj", "<cmd>resize +2<CR>")         -- Increase height
+keymap("n", "<leader>rk", "<cmd>resize -2<CR>")         -- Decrease height
+keymap("n", "<leader>rl", "<cmd>vertical resize +2<CR>")  -- Increase width
+
+-- Larger resizing increments
+keymap("n", "<leader>rH", "<cmd>vertical resize -10<CR>") -- Decrease width by 10
+keymap("n", "<leader>rJ", "<cmd>resize +10<CR>")        -- Increase height by 10
+keymap("n", "<leader>rK", "<cmd>resize -10<CR>")        -- Decrease height by 10
+keymap("n", "<leader>rL", "<cmd>vertical resize +10<CR>") -- Increase width by 10
 
 -- Reload configuration
 keymap("n", "<leader>r", "<cmd>source $MYVIMRC<CR>")

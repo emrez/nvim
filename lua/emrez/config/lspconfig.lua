@@ -25,6 +25,20 @@ M.on_attach = function(_, bufnr)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
 
+-- Auto commands for React Native development
+  vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "javascript", "typescript", "typescriptreact", "typescript.tsx" },
+    callback = function()
+      if vim.bo.filetype == "typescriptreact" or vim.bo.filetype == "typescript.tsx" then
+        -- Enable React Native specific settings
+        vim.bo.commentstring = "{/* %s */}"
+      else if vim.bo.filetype == "javascript" or vim.bo.filetype == "typescript" then
+        -- Enable default JavaScript/TypeScript commenting style
+        vim.bo.commentstring = "// %s"
+        end
+      end
+    end
+  })
   map("n", "gD", vim.lsp.buf.declaration, opts "Go to declaration")
   map("n", 'gr', vim.lsp.buf.references, opts 'Goto References')
   map('n', 'gI', vim.lsp.buf.implementation, opts 'Goto Implementation')
@@ -32,11 +46,11 @@ M.on_attach = function(_, bufnr)
   map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, opts "Add workspace folder")
   map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, opts "Remove workspace folder")
 
-  map("n", "<leader>wl", function()
-    for _, folder in ipairs(vim.lsp.buf.list_workspace_folders()) do
-      print(folder)
-    end
-  end, opts "List workspace folders")
+  -- map("n", "<leader>wl", function()
+  --   for _, folder in ipairs(vim.lsp.buf.list_workspace_folders()) do
+  --     print(folder)
+  --   end
+  -- end, opts "List workspace folders")
 
   map("n", "<leader>D", vim.lsp.buf.type_definition, opts "Go to type definition")
   map('n', '<leader>ds', vim.lsp.buf.document_symbol, opts 'Document Symbols')
